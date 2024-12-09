@@ -64,7 +64,7 @@ public class SentimentAnalysisMapper extends Mapper<LongWritable, Text, Text, In
                 businessId.set(businessIdStr);
                 int score = 0;
             
-                for (String word : reviewText.split("\\s+")) {
+                for (String word : reviewText.toLowerCase().replaceAll("[^a-zA-Z ]", "").split("\\s+")) {
                     if(afinnMap.containsKey(word)) {
                         score += afinnMap.get(word);
                     }

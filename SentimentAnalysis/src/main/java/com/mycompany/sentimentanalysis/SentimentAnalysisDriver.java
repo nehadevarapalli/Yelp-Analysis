@@ -30,10 +30,9 @@ public class SentimentAnalysisDriver extends Configured implements Tool {
     
     @Override
     public int run(String[] args) throws Exception {
-//        Configuration conf = new Configuration();
         Configuration conf = getConf();
         
-        if (args.length != 4) {
+        if (args.length != 2) {
             System.err.println("Usage: SentimentAnalysis <input-path> <output-path>");
             System.exit(-1);
         }
