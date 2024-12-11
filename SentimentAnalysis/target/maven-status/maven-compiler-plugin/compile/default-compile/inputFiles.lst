@@ -1,3 +1,4 @@
-/Users/nehadevarapalli/INFO7250/final-project/SentimentAnalysis/src/main/java/com/mycompany/sentimentanalysis/SentimentAnalysisDriver.java
-/Users/nehadevarapalli/INFO7250/final-project/SentimentAnalysis/src/main/java/com/mycompany/sentimentanalysis/SentimentAnalysisReducer.java
-/Users/nehadevarapalli/INFO7250/final-project/SentimentAnalysis/src/main/java/com/mycompany/sentimentanalysis/SentimentAnalysisMapper.java
+/Users/nehadevarapalli/INFO7250/final-project/Yelp-Analysis/SentimentAnalysis/src/main/java/com/mycompany/sentimentanalysis/SentimentAnalysisMapper.java
+/Users/nehadevarapalli/INFO7250/final-project/Yelp-Analysis/SentimentAnalysis/src/main/java/com/mycompany/sentimentanalysis/SentimentAnalysisDriver.java
+/Users/nehadevarapalli/INFO7250/final-project/Yelp-Analysis/SentimentAnalysis/src/main/java/com/mycompany/sentimentanalysis/SentimentAnalysisReducer.java
+/Users/nehadevarapalli/INFO7250/final-project/Yelp-Analysis/SentimentAnalysis/src/main/java/com/mycompany/sentimentanalysis/BusinessInfoMapper.java

@@ -1,3 +1,4 @@
 com/mycompany/sentimentanalysis/SentimentAnalysisDriver.class
 com/mycompany/sentimentanalysis/SentimentAnalysisMapper.class
 com/mycompany/sentimentanalysis/SentimentAnalysisReducer.class
+com/mycompany/sentimentanalysis/BusinessInfoMapper.class

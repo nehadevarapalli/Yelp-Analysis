@@ -24,9 +24,9 @@ import org.json.JSONObject;
  *
  * @author nehadevarapalli
  */
-public class SentimentAnalysisMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+public class SentimentAnalysisMapper extends Mapper<LongWritable, Text, Text, Text> {
     private final Text businessId = new Text();
-    private final IntWritable sentimentScore = new IntWritable();
+    private final Text sentimentScore = new Text();
     private final HashMap<String, Integer> afinnMap = new HashMap<>();
     private URI[] files;
     
@@ -54,25 +54,20 @@ public class SentimentAnalysisMapper extends Mapper<LongWritable, Text, Text, In
         String businessIdStr;
         String reviewText;
         String line = value.toString();
-        String[] tuple = line.split("\\n");
-        try {
-            for (int i = 0; i < tuple.length; i++) {
-                JSONObject obj = new JSONObject(tuple[i]);
-                businessIdStr = obj.getString("business_id");
-                reviewText = obj.getString("text");
+        try{
+            JSONObject obj = new JSONObject(line);
+            businessIdStr = obj.getString("business_id");
+            reviewText = obj.getString("text");
             
-                businessId.set(businessIdStr);
-                int score = 0;
+            businessId.set(businessIdStr);
+            int score = 0;
             
-                for (String word : reviewText.split("\\s+")) {
-                    if(afinnMap.containsKey(word)) {
-                        score += afinnMap.get(word);
-                    }
-                }
-            
-                sentimentScore.set(score);
-                context.write(businessId, sentimentScore);
+            for (String word : reviewText.toLowerCase().replaceAll("[^a-zA-Z ]", "").split("\\s+")) {
+                score += afinnMap.getOrDefault(word, 0);
             }
+            
+            sentimentScore.set("SCORE: " + score);
+            context.write(businessId, sentimentScore);
         } catch (Exception e) {
             e.printStackTrace();
         }
