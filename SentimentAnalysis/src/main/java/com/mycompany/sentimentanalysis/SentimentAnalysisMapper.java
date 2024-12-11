@@ -24,9 +24,9 @@ import org.json.JSONObject;
  *
  * @author nehadevarapalli
  */
-public class SentimentAnalysisMapper extends Mapper<LongWritable, Text, Text, IntWritable> {
+public class SentimentAnalysisMapper extends Mapper<LongWritable, Text, Text, Text> {
     private final Text businessId = new Text();
-    private final IntWritable sentimentScore = new IntWritable();
+    private final Text sentimentScore = new Text();
     private final HashMap<String, Integer> afinnMap = new HashMap<>();
     private URI[] files;
     
@@ -63,12 +63,10 @@ public class SentimentAnalysisMapper extends Mapper<LongWritable, Text, Text, In
             int score = 0;
             
             for (String word : reviewText.toLowerCase().replaceAll("[^a-zA-Z ]", "").split("\\s+")) {
-                if(afinnMap.containsKey(word)) {
-                    score += afinnMap.get(word);
-                }
+                score += afinnMap.getOrDefault(word, 0);
             }
             
-            sentimentScore.set(score);
+            sentimentScore.set("SCORE: " + score);
             context.write(businessId, sentimentScore);
         } catch (Exception e) {
             e.printStackTrace();

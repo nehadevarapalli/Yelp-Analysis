@@ -6,7 +6,6 @@ package com.mycompany.sentimentanalysis;
 
 import java.io.IOException;
 
-import org.apache.hadoop.io.IntWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.mapreduce.Reducer;
 
@@ -14,18 +13,26 @@ import org.apache.hadoop.mapreduce.Reducer;
  *
  * @author nehadevarapalli
  */
-public class SentimentAnalysisReducer extends Reducer<Text, IntWritable, Text, IntWritable> {
-    private final IntWritable result = new IntWritable();
+public class SentimentAnalysisReducer extends Reducer<Text, Text, Text, Text> {
+    private final Text result = new Text();
     
     @Override
-    protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
-        int sum = 0;
+    protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
+        String businessInfo = null;
+        int totalSentimentScore = 0;
         
-        for (IntWritable val : values) {
-            sum += val.get();
+        for (Text val : values) {
+            String value = val.toString();
+            if (value.startsWith("INFO:")) {
+                businessInfo = value.substring(5);
+            } else if (value.startsWith("SCORE:")) {
+                totalSentimentScore += Integer.parseInt(value.substring(6).trim());
+            }
         }
         
-        result.set(sum);
-        context.write(key, result);
+        if (businessInfo != null) {
+            result.set(businessInfo + " | Sentiment Score: " + totalSentimentScore);
+            context.write(key, result);
+        }
     }
 }
