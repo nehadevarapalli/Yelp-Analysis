@@ -17,7 +17,7 @@ import org.json.JSONObject;
  */
 
 // Mapper to process business.json
-public class BusinessMapper extends Mapper<LongWritable, Text, Text, CategoryStatsWritable> {
+public class BusinessMapper extends Mapper<LongWritable, Text, StateCategoryKey, Text> {
     @Override
     public void map(LongWritable key, Text value, Context context) throws IOException, InterruptedException {
         try {
@@ -25,17 +25,16 @@ public class BusinessMapper extends Mapper<LongWritable, Text, Text, CategorySta
             
             // Extracting location information
             String state = business.optString("state", "Unknown").trim();
-            String locationKey = state;
+            String categoriesStr = business.optString("categories", null);
             
             int reviewCount = business.optInt("review_count", 0);
             double stars = business.optDouble("stars", 0.0);
-            String categoriesStr = business.optString("categories", null);
+            double compositeScore = (0.7 * reviewCount) + (0.3 * stars);
+            
             if (categoriesStr != null && !categoriesStr.isEmpty()) {
-                String[] categories = categoriesStr.split(", ");
+                String[] categories = categoriesStr.split(",");
                 for (String category : categories) {
-                    String outputKey = locationKey.trim() + "|" + category.trim();
-                    CategoryStatsWritable stats = new CategoryStatsWritable(reviewCount, stars, 1);
-                    context.write(new Text(outputKey), stats);
+                    context.write(new StateCategoryKey(state, compositeScore), new Text(category));
                 }
             }
         } catch (Exception e) {

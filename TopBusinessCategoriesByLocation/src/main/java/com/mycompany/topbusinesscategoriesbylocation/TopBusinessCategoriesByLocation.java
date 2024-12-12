@@ -39,10 +39,15 @@ public class TopBusinessCategoriesByLocation extends Configured implements Tool 
         job.setMapperClass(BusinessMapper.class);
         job.setReducerClass(CategoryReducer.class);
         
-        job.setMapOutputKeyClass(Text.class);
-        job.setMapOutputValueClass(CategoryStatsWritable.class);
+        job.setMapOutputKeyClass(StateCategoryKey.class);
+        job.setMapOutputValueClass(Text.class);
+        
         job.setOutputKeyClass(Text.class);
         job.setOutputValueClass(Text.class);
+        
+        job.setPartitionerClass(StatePartitioner.class);
+        job.setGroupingComparatorClass(StateGroupingComparator.class);
+        job.setSortComparatorClass(StateCategoryKeyComparator.class);
         
         FileInputFormat.addInputPath(job, new Path(args[0]));
         FileOutputFormat.setOutputPath(job, new Path(args[1]));
