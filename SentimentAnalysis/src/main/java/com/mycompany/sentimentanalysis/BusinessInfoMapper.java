@@ -31,7 +31,7 @@ public class BusinessInfoMapper extends Mapper<Object, Text, Text, Text> {
             int reviewCount = obj.getInt("review_count");
             
             businessId.set(businessIdStr);
-            businessInfo.set("INFO:" + businessName + " | " + businessCity + ", " + businessState + " | Stars: " + stars + " | Review Count: " + reviewCount);
+            businessInfo.set("INFO:" + businessName + " | " + businessCity + ", " + businessState + " | Stars: " + stars);
             context.write(businessId, businessInfo);
         } catch (Exception e) {
             e.printStackTrace();

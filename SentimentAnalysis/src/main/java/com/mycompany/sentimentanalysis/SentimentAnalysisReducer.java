@@ -20,6 +20,7 @@ public class SentimentAnalysisReducer extends Reducer<Text, Text, Text, Text> {
     protected void reduce(Text key, Iterable<Text> values, Context context) throws IOException, InterruptedException {
         String businessInfo = null;
         int totalSentimentScore = 0;
+        int reviewCount = 0;
         
         for (Text val : values) {
             String value = val.toString();
@@ -27,11 +28,15 @@ public class SentimentAnalysisReducer extends Reducer<Text, Text, Text, Text> {
                 businessInfo = value.substring(5);
             } else if (value.startsWith("SCORE:")) {
                 totalSentimentScore += Integer.parseInt(value.substring(6).trim());
+                reviewCount++;
             }
         }
         
-        if (businessInfo != null) {
-            result.set(businessInfo + " | Sentiment Score: " + totalSentimentScore);
+        if (businessInfo != null && reviewCount > 0) {
+            double normalizedScore = (double) totalSentimentScore / reviewCount;
+            result.set(businessInfo
+                        + " | Reviews: " + reviewCount 
+                        + " | Normalized Sentiment Score: " + normalizedScore);
             context.write(key, result);
         }
     }
