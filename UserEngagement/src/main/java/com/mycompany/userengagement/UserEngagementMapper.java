@@ -37,7 +37,7 @@ public class UserEngagementMapper extends Mapper<LongWritable, Text, Text, Text>
             // Compute engagement score
             double engagementScore = 0.5 * reviewCount + 0.3 * totalCompliments + 0.2 * fans;
 
-            String userInfo = userId + "," + name + "," + reviewCount + "," + totalCompliments + "," + fans;
+            String userInfo = "User ID: " + userId + ", Name: " + name + ", Review Count: " + reviewCount + ", Total Compliments: " + totalCompliments + ", Fans: " + fans;
             context.write(new Text(String.valueOf(engagementScore)), new Text(userInfo));
         } catch (Exception e) {
             e.printStackTrace();

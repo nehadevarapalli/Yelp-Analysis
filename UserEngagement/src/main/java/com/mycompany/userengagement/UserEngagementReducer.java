@@ -34,7 +34,7 @@ public class UserEngagementReducer extends Reducer<Text, Text, Text, Text> {
     protected void cleanup(Context context) throws IOException, InterruptedException {
         for (Double score : topUsersMap.descendingKeySet()) {
             String userInfo = topUsersMap.get(score);
-            context.write(new Text(String.format("%.2f", score)), new Text(userInfo));
+            context.write(new Text(String.format("Engagement Score: %.2f", score)), new Text(userInfo));
         }
     }
 }
