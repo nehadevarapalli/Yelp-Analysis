@@ -12,24 +12,19 @@ extracted_data = foreach raw_data generate (chararray)$0#'business_id' as busine
 (chararray)$0#'is_open' as is_open, (chararray)$0#'attributes' as attributes,
 (chararray)$0#'categories' as categories, (chararray)$0#'hours' as hours;
 
--- Split the categories field into individual categories
-categories_split = FOREACH extracted_data GENERATE
-    business_id,
-    FLATTEN(STRSPLIT(categories, ',')) AS category;
+-- Group businesses by state
+grouped_by_state = GROUP extracted_data BY state;
 
--- Group by category
-grouped_by_category = GROUP categories_split BY category;
+-- Calculate the average review count for each state
+avg_reviews_by_state = FOREACH grouped_by_state GENERATE
+    group AS state,
+    AVG(extracted_data.review_count) AS avg_review_count;
 
--- Count the number of businesses in each category
-business_count_by_category = FOREACH grouped_by_category GENERATE
-    group AS category,
-    COUNT(categories_split) AS business_count;
+-- Order states by average review count in descending order
+ordered_states = ORDER avg_reviews_by_state BY avg_review_count DESC;
 
--- Order categories by business count in descending order
-ordered_categories = ORDER business_count_by_category BY business_count DESC;
+-- Display the top 10 states with the highest average review counts
+top_10_states = LIMIT ordered_states 10;
+DUMP top_10_states;
 
--- Display the top 10 categories with the most businesses
-top_10_categories = LIMIT ordered_categories 10;
-DUMP top_10_categories;
-
-STORE top_10_categories INTO '/output/top_10_categories' USING PigStorage(',');
+STORE top_10_states INTO '/output/top_10_states' USING PigStorage(',');
