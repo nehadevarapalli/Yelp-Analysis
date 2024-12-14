@@ -25,17 +25,13 @@ public class StaffActivityMapper extends Mapper<Object, Text, Text, IntWritable>
     @Override
     protected void map(Object key, Text value, Context context) throws IOException, InterruptedException {
         try {
-            // Parse the input JSON
             JSONObject obj = new JSONObject(value.toString());
             String businessId = obj.getString("business_id");
             String date = obj.getString("date");
 
-            // Split the comma-separated list of timestamps
             String[] timestamps = date.split(", ");
 
-            // Process each timestamp in the list
             for (String timestamp : timestamps) {
-                // Parse the timestamp into a Calendar object
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(dateFormat.parse(timestamp));
 
@@ -45,7 +41,6 @@ public class StaffActivityMapper extends Mapper<Object, Text, Text, IntWritable>
                 // Create the key using businessId, dayOfWeek
                 businessDayHourKey.set(businessId + ":" + dayOfWeek);
 
-                // Emit the key with value '1' (indicating one check-in for this hour)
                 context.write(businessDayHourKey, one);
             }
         } catch (ParseException e) {

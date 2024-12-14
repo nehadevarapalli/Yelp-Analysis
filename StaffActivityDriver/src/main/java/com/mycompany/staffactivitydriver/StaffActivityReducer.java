@@ -20,12 +20,10 @@ public class StaffActivityReducer extends Reducer<Text, IntWritable, Text, IntWr
     protected void reduce(Text key, Iterable<IntWritable> values, Context context) throws IOException, InterruptedException {
         int totalCount = 0;
 
-        // Sum up the counts for each businessId:day_of_week,hour
         for (IntWritable val : values) {
             totalCount += val.get();
         }
 
-        // Emit the final counts
         result.set(totalCount);
         context.write(key, result);
     }
